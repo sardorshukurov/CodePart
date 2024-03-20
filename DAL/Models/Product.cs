@@ -10,9 +10,8 @@ namespace DAL.Models;
 [Index("Name", Name = "Product_Name_IDX")]
 public partial class Product
 {
-    [Key]
-    [Column("ID")]
-    public Guid Id { get; set; }
+    [Key] [Column("ID")] 
+    public Guid Id { get; set; } = Guid.NewGuid();
 
     [StringLength(255)]
     public string Name { get; set; } = null!;
