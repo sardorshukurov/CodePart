@@ -1,0 +1,48 @@
+<!-- Button trigger modal -->
+<button type="button" id="btn-add-edit" style="display: none"  class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productModal">
+  Add
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="productModalLabel">Add/Edit</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-lg-3">
+            <label>Id</label>
+          </div>
+          <div class="col-lg-9">
+            <div class="form-group">
+              <input id="productId" disabled="disabled" class="form-control"/>
+            </div>
+          </div>
+          <div class="col-lg-3">
+            <label>Name</label>
+          </div>
+          <div class="col-lg-9">
+            <div class="form-group">
+              <input id="name" class="form-control"/>
+            </div>
+          </div>
+          <div class="col-lg-3">
+            <label>Description</label>
+          </div>
+          <div class="col-lg-9">
+            <div class="form-group">
+              <textarea id="description" class="form-control"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="#" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</a>
+        <a href="#" onclick="Save(); return false;" type="button" class="btn btn-primary">Save changes</a>
+      </div>
+    </div>
+  </div>
+</div>

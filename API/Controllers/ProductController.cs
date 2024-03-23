@@ -17,7 +17,28 @@ namespace API.Controllers
             _service = service;
         }
 
-        [HttpGet]
+        [HttpGet("all", Name = "GetAll")]
+        public async Task<IActionResult> GetAll()
+        {
+            try
+            {
+                var products = await _service.GetAll();
+
+                if (products.Any())
+                {
+                    return Ok(products);
+                }
+
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+                return StatusCode(500, e.Message);
+            }
+        }
+        
+        [HttpGet("byName", Name = "GetAllByName")]
         public async Task<IActionResult> GetAllByName(string name)
         {
             try
@@ -38,6 +59,27 @@ namespace API.Controllers
             }
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(Guid id)
+        {
+            try
+            {
+                var product = await _service.GetProductById(id);
+
+                return Ok(product);
+            }
+            catch (NotFoundException e)
+            {
+                Log.Warning(e.Message);
+                return NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+                return StatusCode(500, e.Message);
+            }
+        }
+        
         [HttpPost]
         public async Task<IActionResult> AddProduct(ProductDTO product)
         {

@@ -1,9 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Services.DTOs;
+namespace MVC.Models;
 
-public class ProductDTO
+public class Product
 {
+    public Guid Id { get; set; }
     [MaxLength(255)]
     public required string Name { get; set; }
 

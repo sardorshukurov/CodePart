@@ -15,7 +15,12 @@ public class ProductService : IProductService
     {
         _context = context;
     }
-    
+
+    public async Task<IEnumerable<Product>> GetAll()
+    {
+        return await _context.Products.ToListAsync();
+    }
+
     public async Task<IEnumerable<Product>> GetByName(string name)
     {
         var products = await _context.Products
@@ -53,7 +58,7 @@ public class ProductService : IProductService
         await _context.SaveChangesAsync();
     }
 
-    private async Task<Product> GetProductById(Guid id)
+    public async Task<Product> GetProductById(Guid id)
     {
         var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
 

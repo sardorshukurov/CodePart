@@ -1,0 +1,184 @@
+@model List<MVC.Models.Product>
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<h2>Products</h2>
+
+<a href="#" onclick="CreateNew()"; return false; class="btn btn-primary">Add</a>
+
+@Html.Partial("PartialViews/_product")
+@Html.Partial("PartialViews/_deleteProduct")
+
+<form asp-action="Search" method="get">
+    <div class="form-group">
+        <label for="searchInput">Search:</label>
+        <input type="text" id="searchInput" name="searchString" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+<table class="table", id="productTable">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    @if (Model is not null)
+    {
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    <a href="#" onclick="Edit('@item.Id')"; return false; class="btn btn-primary">Edit</a> |
+                    <a href="#" onclick="Delete('@item.Id')"; return false; class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    }
+    </tbody>
+</table>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        });
+    
+    function CreateNew(){
+        ClearAll();
+        $('#btn-add-edit').trigger('click');
+        $('#productModalLabel').text('Add Product');
+
+        $('#saveBtn').text('Add');
+    }
+    
+    function ClearAll(){
+        $('#productId').val('');
+        $('#name').val('');
+        $('#description').val('');
+    }
+    
+    function Save(){
+        let isValid = true;
+        let productId = $('#productId').val();
+        let name = $('#name').val();
+        let description = $('#description').val();
+        
+        if (name == ''){
+            isValid = false;
+            $('#name').css('border-color', 'red');
+        }else {
+            $('#name').css('border-color', '#ccc');
+        }
+        
+        
+        let product = {
+            name: name,
+            description: description
+        };
+    
+        let url = 'Product/Add';
+        if (productId) {
+            url = 'Product/Edit/' + productId;
+            product.id = productId;
+        }
+    
+        if (isValid) {
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: product,
+                success: function (data) {
+                    if (data) {
+                        alert('Saved successfully');
+                        $('#productModal').modal('hide');
+                        location.reload();
+                    } else {
+                        alert('Failed');
+                    }
+                },
+                error: function () {
+                    alert('Failed to communicate with server');
+                }
+            });
+        }
+    }
+        
+    function Edit(id) {
+        ClearAll();
+        $('#btn-add-edit').trigger('click');
+        // Call the server to get product details by id
+        $.ajax({
+            type: 'GET',
+            url: 'Product/Get?id=' + id,
+            success: function(data) {
+                // Populate the form fields with product data
+                $('#productId').val(data.id);
+                $('#name').val(data.name);
+                $('#description').val(data.description);
+
+                $('#productModalLabel').text('Edit Product');
+
+                $('#saveBtn').text('Update');
+
+                $('#productModal').modal('show');
+            },
+            error: function() {
+                alert('Failed to retrieve product details');
+            }
+        });
+    }
+    
+    function Delete(id){
+        $('#deleteId').val('');
+        $('#deleteName').val('');
+        $('#btn-delete').trigger('click');
+        
+        $.ajax({
+            type: 'GET',
+            url: 'Product/Get?id=' + id,
+            success: function(data) {
+                // Populate the form fields with product data
+                $('#deleteId').val(data.id);
+                $('#deleteName').val(data.name);
+
+                $('#deleteModal').modal('show');
+            },
+            error: function() {
+                alert('Failed to retrieve product details');
+            }
+        });
+    }
+    
+    function DeleteConfirmed(){
+        let productId = $('#deleteId').val();
+        $.ajax({
+            type: 'POST',
+            url: 'Product/Delete?id=' + productId,
+            data: productId,
+            success: function (data) {
+                if (data) {
+                    alert('Deleted successfully');
+                    $('#productModal').modal('hide');
+                    location.reload();
+                } else {
+                    alert('Failed');
+                }
+            },
+            error: function () {
+                alert('Failed to communicate with server');
+            }
+        });
+    }
+</script>
